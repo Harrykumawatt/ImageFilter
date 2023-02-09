@@ -1,0 +1,99 @@
+import 'dart:math';
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
+import 'package:like_button/like_button.dart';
+
+void main() {
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    title: "",
+    home: Scaffold(
+      appBar: AppBar(
+        title: Text("Like Button"),
+        centerTitle: true,
+      ),
+      body: MyApp(),
+    ),
+  ));
+}
+
+class MyApp extends StatefulWidget {
+  MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  double _sigmaX = 0, _sigmaY = 0;
+  double _rotZ = 0;
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: EdgeInsets.all(8),
+      children: [
+        ImageFiltered(
+          imageFilter: ImageFilter.blur(sigmaX: _sigmaX, sigmaY: _sigmaY),
+          child: Image.network(
+              'https://miro.medium.com/max/1200/1*ogNimrTnf_COR7ImVFr3-A.png'),
+        ),
+        ImageFiltered(
+          imageFilter: ImageFilter.matrix(Matrix4.rotationZ(_rotZ).storage),
+          child: Text(
+            'No only can images be"filtered",in fact any widget'
+            'can be placed under ImageFiltered!',
+          ),
+        ),
+        Divider(),
+        ..._controlWidgets(),
+      ],
+    );
+  }
+
+  List<Widget> _controlWidgets() {
+    return [
+      Row(
+        children: [
+          Text('sigmaX:'),
+          Expanded(
+            child: Slider(
+              value: _sigmaX,
+              onChanged: (val) {
+                setState(() => this._sigmaX = val);
+              },
+            ),
+          ),
+          Text(_sigmaX.toStringAsFixed(1)),
+        ],
+      ),
+      Row(children: [
+        Text('sigmaY:'),
+        Expanded(
+          child: Slider(
+            value: _sigmaY,
+            max: 20,
+            onChanged: (val) {
+              setState(() => this._sigmaY = val);
+            },
+          ),
+        ),
+        Text(_sigmaX.toStringAsFixed(1)),
+      ]),
+      Row(children: [
+        Text('rotationZ:'),
+        Expanded(
+          child: Slider(
+            value: _rotZ,
+            min: -1.6,
+            max: 1.6,
+            onChanged: (val) {
+              setState(() => this._rotZ = val);
+            },
+          ),
+        ),
+        Text(_sigmaX.toStringAsFixed(1)),
+      ])
+    ];
+  }
+}
